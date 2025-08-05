@@ -1,0 +1,304 @@
+// implicitGrid.ogsfx
+// Maya Shader file
+
+// WARNING : This shader generate a huge amount of SDF surfaces (without using the repetition domain), so it can
+// dramatically slowdown your computer.
+
+// Final step to convert a mesh into a sdf.
+// shader to display an implicit surface from a 3D signed distance field grid using raymarching.
+// This shader generate a sphere for each cell of the grid only where the value is negative.
+
+#pragma FullCompileOnLoad:true;
+
+// World-view-projection transformation.
+uniform mat4 gWVPXf : WorldViewProjection;
+
+// TEXTURE
+// The single filter input, i.e. the image to be filtered.
+uniform texture2D gInputTex : InputTexture;
+// Filter input sampler.
+uniform sampler2D gInputSampTex = sampler_state
+{
+    Texture = <gInputTex>;
+};
+
+// DEPTH
+
+uniform texture2D gInputDepth : InputDepth;
+uniform sampler2D gInputSampDepth = sampler_state
+{
+    Texture = <gInputDepth>;
+};
+
+// SDF GRID
+
+uniform texture2D gInputGrid : InputGrid;
+uniform sampler2D gInputSampGrid = sampler_state
+{
+    Texture = <gInputGrid>;
+};
+
+
+uniform float nearClip = 0.1;
+uniform float farClip = 10000.0;
+
+
+uniform float camPosX = 0.0;
+uniform float camPosY = 0.0;
+uniform float camPosZ = 0.0;
+
+uniform float camRotX = 0.0;
+uniform float camRotY = 0.0;
+uniform float camRotZ = 0.0;
+
+uniform float aspectRatio = 1.0;
+
+uniform float fovV = 45.0;
+uniform float fovH = 45.0;
+
+uniform float frame = 1;
+
+uniform float colorR = 0.18;
+uniform float colorG = 0.18;
+uniform float colorB = 0.18;
+
+uniform int renderType = 1;
+
+
+//=============================================================================================================================
+
+// The vertex shader input
+attribute vs_input
+{
+    vec2 UV : TEXCOORD0;
+	vec3 in_position : POSITION;
+};
+
+// The pipeline vertex shader -> pixel shader (pixel shader input)
+attribute vs_to_ps
+{
+    vec2 screenUV : TEXCOORD0;
+};
+
+// The pixel shader output
+attribute ps_output
+{
+    vec4 out_color : COLOR0;
+}
+
+
+//=============================================================================================================================
+
+// All the functions or constants that will be used by the vertex shader
+GLSLShader VS
+{
+	// Only the main function, which is the same as the main function of vertex shader
+    void main()
+    {
+        gl_Position = gWVPXf * vec4(in_position, 1.0);
+		screenUV = UV; // UV coordinate of the screen (between 0 and 1)
+    }
+}
+
+//=============================================================================================================================
+
+// All the functions or constants that will be used by the pixel shader
+GLSLShader PS
+{
+
+    mat3 rotationMatrix(vec3 rot)
+    {
+        vec3 rad = radians(rot);
+        float sx = sin(rad.x), cx = cos(rad.x);
+        float sy = sin(rad.y), cy = cos(rad.y);
+        float sz = sin(rad.z), cz = cos(rad.z);
+
+        mat3 rotX = mat3(1.0, 0.0, 0.0,
+                         0.0, cx, -sx,
+                         0.0, sx, cx);
+
+        mat3 rotY = mat3(cy, 0.0, sy,
+                         0.0, 1.0, 0.0,
+                         -sy, 0.0, cy);
+
+        mat3 rotZ = mat3(cz, -sz, 0.0,
+                         sz, cz, 0.0,
+                         0.0, 0.0, 1.0);
+
+        return rotZ * rotY * rotX;
+    }
+
+	float sdSphere(in vec3 pos, float rad)
+	{
+		return length(pos) - rad;
+	}
+
+	float smin(in float a, in float b, float k)
+	{
+		float h = max(k - abs(a-b), 0.0);
+		return min(a,b) - h*h/(k*4.0);
+	}
+
+        float repeated( vec3 p, float s)
+    {
+        p.x = p.x - clamp(round(p.x), -15, 15);
+        p.y = p.y - clamp(round(p.y), -15, 15);
+        p.z = p.z - clamp(round(p.z), -15, 15);
+        return sdSphere(p, 0.2);
+    }
+
+
+    float genSDF(in vec3 pos)
+    {
+        float globalSDF = 100000;
+        const int sizeX = textureSize(gInputSampGrid, 0).x;   // x size of the given image
+        const int sizeY = textureSize(gInputSampGrid, 0).y;   // y size of the given image
+
+        for(int k = 0; k < sizeX; ++k) {      // z
+            for(int j = 0; j < sizeX; ++j) {      // y
+                for(int i = 0; i < sizeX; ++i) {      // x
+                    float u = float(i) / float(sizeX - 1);  // 0..1
+                    float v = float(j + k * sizeX) / float(sizeX*sizeX - 1); // 0..1
+
+                    // Get the value of the RGBA image (value between 0 and 1)
+                    float value = texture2D(gInputSampGrid, vec2(u, v)).r;
+
+                    // threshold
+                    if ( 0.2 < value && value < 0.3) {
+                        vec3 voxel_pos = vec3(i - sizeX/2, j - sizeX/2, k - sizeX/2); // centre la grille
+                        float sphere = sdSphere(pos - voxel_pos, 0.5);
+                        globalSDF = smin(globalSDF, sphere, 1.5);
+                    }
+                }
+            }
+        }
+        return globalSDF;
+    }
+
+	float sdGlobal(in vec3 pos)
+	{
+        float globalSDF = genSDF(pos);
+		return globalSDF;
+	}
+
+	float map(in vec3 pos)
+	{
+		float d = sdGlobal(pos);
+		float ground_height = 0.0;
+		float d2 = pos.y;
+		//return min(d, d2);
+		return d;
+	}
+
+	vec3 calcNormal(in vec3 pos)
+	{
+		vec2 e = vec2(0.0001, 0.0);
+		return normalize(vec3(map(pos + e.xyy) - map(pos - e.xyy),
+							  map(pos + e.yxy) - map(pos - e.yxy),
+							  map(pos + e.yyx) - map(pos - e.yyx)));
+	}
+
+    // Raymarching algorithm : Calculate the distance of the given ray. The ray ended when it intersect with a surface
+	float castRay(in vec3 ro, vec3 rd, float render_dist, float iterations)
+	{
+		float total_dist = 0.0; // total distance march by ray from origin
+		for(int i = 0; i < iterations; i++)
+		{
+			vec3 pos = ro + total_dist * rd; //
+			float dist = map(pos); // get the distance with the closest surface
+			if(dist < 0.001) // If the distance is low, it mean we are really close to the surface, then we stop the raymarching
+				break;
+			total_dist += dist;
+			if(total_dist > render_dist) // If the total distance is too high, it mean the ray didn't intersect with any surface, so we stop the raymarching
+				break;
+		}
+		if(total_dist > render_dist) total_dist = -1.0;
+		return total_dist;
+	}
+
+    // Only the main function, which is the same as the main function of the .glslf
+	void main()
+	{
+	    vec3 material = vec3(colorR, colorG, colorB);
+
+	    // screenUV is the position of a specific pixel. This function is running for each pixel of the viewport
+	    vec2 screenDir = 2.0 * screenUV - 1; // Remappe the screen UV domain from [0, 1] to [-1, 1]
+	    screenDir.x *= aspectRatio; // Adjust x to fit with viewport aspect ratio
+	    screenDir *= tan(radians(fovV) * 0.5);
+
+	    float rmch_iteration = 100.0; // render accuracy (number of step on the ray)
+
+        vec3 camPos = vec3(camPosX, camPosY, camPosZ);
+        vec3 camRot = vec3(-camRotX, -camRotY, camRotZ);
+        mat3 camMatrix = rotationMatrix(camRot);
+
+        vec3 forward = camMatrix * vec3(0.0, 0.0, -1.0);
+        vec3 right = camMatrix * vec3(1.0, 0.0, 0.0);
+        vec3 up = camMatrix * vec3(0.0, 1.0, 0.0);
+
+        vec3 rayDir = normalize(screenDir.x * right + screenDir.y * up + forward);
+        vec3 rayOrigin = camPos;
+
+	    float dist_from_surf = castRay(rayOrigin, rayDir, farClip, rmch_iteration);
+
+        vec3 color = vec3(0.65, 0.75, 0.9) - 0.8 * rayDir.y;
+
+
+        // Get the depth of the scene from the Z-Buffer
+        float depthValue = texture2D(gInputSampDepth, screenUV).r; // Z-buffer value between 0 and 1 (normalized)
+        depthValue = clamp(depthValue, 0.0001, 0.9999); // To avoid division by 0
+        float depthScene = (nearClip * farClip) / (farClip - (depthValue * (farClip - nearClip))); // denormalized
+
+        float epsilon = 0.0; // Offset to avoid Z-fighting
+
+	    if(dist_from_surf > 0.0 && dist_from_surf < (depthScene - epsilon))
+	    {
+	        vec3 hit_ptn = rayOrigin + dist_from_surf * rayDir; // Calculate surface hit point position
+        	vec3 normal = calcNormal(hit_ptn); // Get the normal of the surface point hit
+
+            if (renderType == 0)
+            {
+                // LAMBERT RENDER
+                vec3 headlight_dir = normalize(rayOrigin - hit_ptn); // render with light on camera
+                float diffuse = clamp(dot(normal, headlight_dir), 0.0, 1.0);
+                color = material * diffuse;
+            }
+
+            if (renderType == 1)
+            {
+                // REALISTIC RENDER
+                vec3 sun_dir = normalize(vec3(0.8, 0.4, 0.2));
+                float sun_dif = clamp(dot(normal, sun_dir), 0.0, 1.0);
+                float sun_sha = step(castRay(hit_ptn + normal * 0.001, sun_dir, farClip, rmch_iteration), 0.0);
+                float sky_dif = clamp(0.5 + 0.5 * dot(normal, vec3(0.0, 1.0, 0.0)), 0.0, 1.0);
+                float bou_dif = clamp(0.5 + 0.5 * dot(normal, vec3(0.0, -1.0, 0.0)), 0.0, 1.0);
+                color = material * vec3(7.0, 5.0, 3.0) * sun_dif * sun_sha;
+                color += material * vec3(0.5, 0.8, 0.9) * sky_dif;
+                color += material * vec3(0.7, 0.3, 0.2) * bou_dif;
+            }
+
+    		color = pow(color, vec3(0.4545));
+    		out_color = vec4(color, 1.0);
+        }
+        else
+        {
+
+            out_color = texture2D(gInputSampTex, vec2(screenUV.x, 1.0 - screenUV.y));
+
+        }
+
+	}
+
+}
+
+//=============================================================================================================================
+
+// OGSFX Shader Declaration
+technique Main
+{
+    pass p0
+    {
+    	VertexShader (in vs_input, out vs_to_ps) = VS;
+        PixelShader (in vs_to_ps, out ps_output) = PS;
+    }
+}
