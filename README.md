@@ -1,17 +1,17 @@
 # mSDFRenderer
-A set of plug-ins for **Autodesk Maya** that displays signed distance functions (implicit surfaces) in the viewport in real-time.
+A set of plug-ins for **Autodesk Maya 2022** that displays signed distance functions (implicit surfaces) in the viewport in real-time.
 
 ![cover](doc/gif/SDF_spheres_animation_wo_bg.gif)
 
 ## Overview
-This project is an experiment that evaluates the suitability of using signed distance functions (SDF) and ray marching within an 
+This project is an experiment that evaluates the suitability of using **signed distance functions** (SDF) and **ray marching** within an 
 animation pipeline in Autodesk Maya. Several applications are possible.
 
-One potential use is during the animation stage. At this point in production, Maya scenes must remain highly performant. Because ray 
+One potential use is during the animation task. At this point in production, Maya scenes must remain highly performant. Because ray 
 marching can be efficient, the idea is to convert existing background meshes into SDF and render them with ray marching to keep 
 working scenes lightweight. Animated elements, such as characters and props, remain as polygonal meshes.
 
-The goal of the plugin is to display SDF-defined surfaces in Maya’s viewport in real time. These SDF can be defined directly inside 
+The goal of the plugin is to **display SDF-defined surfaces in Maya’s viewport in real time**. These SDF can be defined directly inside 
 the shader or imported from a 3D grid that stores signed distances to a surface.
 
 SDF provide an alternative to polygon meshes for representing 3D surfaces. Instead of vertices and faces, a surface is specified by a 
@@ -27,16 +27,16 @@ While Maya includes a “blobby surface” technology for working with metaballs
 rendering. This conversion negates the core benefits of SDF in terms of image quality and performance. This project aims to leverage 
 the full advantages of SDF by rendering them directly via ray marching.
 
-To display SDF in Maya’s viewport, we override the viewport pipeline using Maya’s `MRenderOverride` API.
+To display SDF in Maya’s viewport, we override the viewport pipeline using Maya’s `MRenderOverride` [API](https://help.autodesk.com/view/MAYAUL/2022/ENU/?guid=Maya_SDK_Viewport_2_0_API_Maya_Viewport_2_0_API_Guide_Plug_in_Entry_Points_Render_Loop_Overrides_html).
 
 To render SDF, we developed several shaders that generate SDF and display them using ray marching. The shaders use the OGSFX format, 
 Maya’s shader format, which bundles both the vertex and pixel (fragment) shaders. In our case, we do not use a vertex shader because no 
-geometry is required to produce SDF; the work is almost only done in the pixel shader. The shader code is similar to GLSL.
+geometry is required to produce SDF, the work is almost only done in the pixel shader. The shader code is similar to GLSL.
 
 Each shader receives all relevant Maya camera attributes (position, rotation, FOV, etc.) as inputs to drive the ray marching render.
 
-The shaders are designed to work with Maya’s default viewport renderer, so meshes and SDF can be displayed together in the same 
-viewport.
+The shaders are designed to work with Maya’s default viewport renderer, so **meshes and SDF surfaces can be displayed together in the same 
+viewport.**
 
 ### Converting a Mesh into an SDF
 
@@ -93,7 +93,9 @@ To display meshes converted into a signed distance field:
 |`implicitGridRender.ogsfx`|Final step in converting a mesh to an SDF. Shader that displays an implicit surface from a 3D signed distance field grid using ray marching. This shader does not generate spheres; the ray marching operates directly on the grid.|
 |`limiteSphereGrid.ogsfx`|Final step in converting a mesh to an SDF. WIP shader that displays an implicit surface from a 3D signed distance field grid. This shader uses a repetition domain to instantiate a sphere for each grid cell. The sphere’s radius depends on the grid value: if the value is negative, the radius is positive; if the value is positive, the radius is null.|
 
-⚠️ **These shaders do not work without a grid**. To generate a signed distance field grid, use the `gen_sdf.py` script with the following command:
+⚠️ **These shaders do not work without a grid**. 
+
+- To generate a signed distance field grid, use the `gen_sdf.py` script with the following command:
 ```
 python src\gen_sdf.py src\data\stanford-bunny.obj src\data\stanford-bunny-grid.png 20 0.8
 ```
