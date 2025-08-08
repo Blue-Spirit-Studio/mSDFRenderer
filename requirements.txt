@@ -1,0 +1,4 @@
+trimesh==4.6.8 # MIT
+mesh2sdf==1.1.0 # MIT
+numpy==1.26.4 # BSD
+imageio==2.37.0 # BSD
