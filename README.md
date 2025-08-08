@@ -1,5 +1,5 @@
 # mSDFRenderer
-A set of plug-ins for **Autodesk Maya** that display signed distance functions (implicit surfaces) in viewport in real-time.
+A set of plug-ins for **Autodesk Maya** that displays signed distance functions (implicit surfaces) in the viewport in real-time.
 
 ![cover](doc/gif/SDF_spheres_animation_wo_bg.gif)
 
