@@ -4,7 +4,7 @@ A set of plug-ins for **Autodesk Maya** that displays signed distance functions 
 ![cover](doc/gif/SDF_spheres_animation_wo_bg.gif)
 
 ## Overview
-This project is an experiment that evaluates the suitability of using signed distance fields (SDF) and ray marching within an 
+This project is an experiment that evaluates the suitability of using signed distance functions (SDF) and ray marching within an 
 animation pipeline in Autodesk Maya. Several applications are possible.
 
 One potential use is during the animation stage. At this point in production, Maya scenes must remain highly performant. Because ray 
@@ -63,7 +63,7 @@ the demo shaders you want to display :
 |`infiniteSphere.ogsfx`|Demo shader that instantiates spheres infinitely using domain repetition. The spheres are rendered with ray marching.|
 |`limiteSphere.ogsfx`|Demo shader that instantiates spheres within a finite region using domain repetition. The spheres are rendered with ray marching.|
 
-- Then load the `src/sdf_renderer.py` plug-in using Maya’s Plug-in Manager.
+- Then load the `sdf_renderer.py` plug-in using Maya’s Plug-in Manager.
 
 
 - Next, in Maya’s viewport settings, under Renderer, select **SDF Renderer** to use the overridden version with the shader referenced 
@@ -71,7 +71,7 @@ earlier.
 
 To modify the appearance of SDF (Lambert, Realistic, etc.): 
 
-- Load the `src/sdf_setting_node.py` plug-in.  
+- Load the `sdf_setting_node.py` plug-in.  
 - With this plug-in you can creates a node of type SDFSettingNode which, through the editor attribute, lets you adjust shader parameters in real time.  
 
 Alternatively, it can be done with the following code:
