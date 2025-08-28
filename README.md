@@ -4,7 +4,7 @@ A set of plug-ins for **Autodesk Maya 2022** that displays signed distance funct
 ![cover](doc/gif/SDF_spheres_animation_wo_bg.gif)
 
 ## Overview
-This project is an experiment that evaluates the suitability of using **signed distance functions** (SDF) and **ray marching** within an 
+This project is an experiment that evaluates the suitability of using **Signed Distance Functions** (SDF) and **Ray Marching** within an 
 animation pipeline in Autodesk Maya. Several applications are possible.
 
 One potential use is during the animation task. At this point in production, Maya scenes must remain highly performant. Because ray 
@@ -17,13 +17,14 @@ the shader or imported from a 3D grid that stores signed distances to a surface.
 SDF provide an alternative to polygon meshes for representing 3D surfaces. Instead of vertices and faces, a surface is specified by a 
 mathematical function called "signed distance function", which can greatly reduce storage requirements and improve performances. 
 
-This function takes a 3D point as input and must meet three conditions:
-
-1) If the point is on the surface, return 0.
-2) If the point is outside, return the positive shortest distance to the surface.
-3) If the point is inside, return the negative shortest distance to the surface."
-
-Ray marching is the rendering technique used to visualize these implicit surfaces.
+> [!NOTE]
+> A **Signed Distance Function** takes a 3D point as input and must meet three conditions:
+>
+>1) If the point is on the surface, return 0.
+>2) If the point is outside, return the positive shortest distance to the surface.
+>3) If the point is inside, return the negative shortest distance to the surface."
+>
+> **Ray Marching** is the rendering technique used to visualize these implicit surfaces.
 
 -------------------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ Ray marching is the rendering technique used to visualize these implicit surface
 ### Rendering SDF in Maya viewport
 
 While Maya includes a “blobby surface” technology for working with metaballs, it ultimately converts them to polygonal meshes before 
-rendering. This conversion negates the core benefits of SDF in terms of image quality and performance. This project aims to leverage 
+rendering. This conversion negates the core benefits of SDF in terms of storage and performance. This project aims to leverage 
 the full advantages of SDF by rendering them directly via ray marching.
 
 To display SDF in Maya’s viewport, we override the viewport pipeline using Maya’s `MRenderOverride` [API](https://help.autodesk.com/view/MAYAUL/2022/ENU/?guid=Maya_SDK_Viewport_2_0_API_Maya_Viewport_2_0_API_Guide_Plug_in_Entry_Points_Render_Loop_Overrides_html).
@@ -100,16 +101,15 @@ To display meshes converted into a signed distance field:
 |`implicitGridRender.ogsfx`|Final step in converting a mesh to an SDF. Shader that displays an implicit surface from a 3D signed distance field grid using ray marching. This shader does not generate spheres; the ray marching operates directly on the grid.|
 |`limiteSphereGrid.ogsfx`|Final step in converting a mesh to an SDF. WIP shader that displays an implicit surface from a 3D signed distance field grid. This shader uses a repetition domain to instantiate a sphere for each grid cell. The sphere’s radius depends on the grid value: if the value is negative, the radius is positive; if the value is positive, the radius is null.|
 
-⚠️ **These shaders do not work without a grid**. 
-
-- To generate a signed distance field grid, use the `gen_sdf.py` script with the following command:
-```
-python src\gen_sdf.py src\data\stanford-bunny.obj src\data\stanford-bunny-grid.png 20 0.8
-```
-
-This command generates a grid as a 2D image, which you must reference in the `sdf_renderer.py` script via the `GRID_PATH` variable.
-
-- A Maya restart is sometimes required.
+> [!IMPORTANT]
+> ⚠️ **These shaders do not work without a grid**. 
+>- To generate a signed distance field grid, use the `gen_sdf.py` script with the following command:
+>```
+>python src\gen_sdf.py src\data\stanford-bunny.obj src\data\stanford-bunny-grid.png 20 0.8
+>```
+>This command generates a grid as a 2D image, which you must reference in the `sdf_renderer.py` script via the `GRID_PATH` variable.
+>
+>- A Maya restart is sometimes required.
 
 ## License
 This project is licensed under the MIT License.
