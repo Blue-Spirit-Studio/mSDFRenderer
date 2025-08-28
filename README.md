@@ -16,6 +16,13 @@ the shader or imported from a 3D grid that stores signed distances to a surface.
 
 SDF provide an alternative to polygon meshes for representing 3D surfaces. Instead of vertices and faces, a surface is specified by a 
 mathematical function called "signed distance function", which can greatly reduce storage requirements and improve performances. 
+
+This function takes a 3D point as input and must meet three conditions:
+
+1) If the point is on the surface, return 0.
+2) If the point is outside, return the positive shortest distance to the surface.
+3) If the point is inside, return the negative shortest distance to the surface."
+
 Ray marching is the rendering technique used to visualize these implicit surfaces.
 
 -------------------------------------------------------------------------------
