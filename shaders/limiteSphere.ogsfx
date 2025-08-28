@@ -1,8 +1,8 @@
 // limiteSphere.ogsfx
 // Maya Shader file
 
-// Shader demo which instanced spheres in a finite space using repetition domain.
-// The spheres are displayed using raymarching.
+// Demo shader that instantiates spheres within a finite region using domain repetition. The spheres are rendered with
+// ray marching.
 
 #pragma FullCompileOnLoad:true;
 

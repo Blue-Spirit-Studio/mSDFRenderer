@@ -1,9 +1,9 @@
 // implicitGridRender.ogsfx
 // Maya Shader file
 
-// Final step to convert a mesh into a sdf.
-// shader to display an implicit surface from a 3D signed distance field grid using raymarching.
-// This shader doesn't generate any sphere. The raymarching operate directly on the grid.
+// Final step in converting a mesh to an SDF.
+//  Shader that displays an implicit surface from a 3D signed distance field grid using ray marching.
+// This shader does not generate spheres; the ray marching operates directly on the grid.
 
 #pragma FullCompileOnLoad:true;
 

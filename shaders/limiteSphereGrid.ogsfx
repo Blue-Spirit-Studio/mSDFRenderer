@@ -1,11 +1,10 @@
 // limitSphereGrid.ogsfx
 // Maya Shader file
 
-// Final step to convert a mesh into a sdf
-// WIP shader to display an implicit surface from a 3D signed distance field grid.
-// This shader use repetition domain to instance a sphere for each cell of the grid. The radius of the sphere depends
-// of the grid value. If the value is negative then the radius of the sphere will by positive and if the value is positive
-// the radius will be null.
+// Final step in converting a mesh to an SDF
+// WIP shader that displays an implicit surface from a 3D signed distance field grid. This shader uses a repetition
+// domain to instantiate a sphere for each grid cell. The sphere’s radius depends on the grid value: if the value is
+// negative, the radius is positive; if the value is positive, the radius is null.
 
 #pragma FullCompileOnLoad:true;
 

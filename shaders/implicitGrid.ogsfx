@@ -1,12 +1,12 @@
 // implicitGrid.ogsfx
 // Maya Shader file
 
-// WARNING : This shader generate a huge amount of SDF surfaces (without using the repetition domain), so it can
-// dramatically slowdown your computer.
+// WARNING: This shader generates a very large number of SDF primitives (without using a repetition domain), which can
+// dramatically slow down your computer.
 
-// Final step to convert a mesh into a sdf.
-// shader to display an implicit surface from a 3D signed distance field grid using raymarching.
-// This shader generate a sphere for each cell of the grid only where the value is negative.
+// Final step in converting a mesh to an SDF
+// Shader that displays an implicit surface from a 3D signed distance field grid using ray marching.
+// This shader generates a sphere for each grid cell where the value is negative.
 
 #pragma FullCompileOnLoad:true;
 

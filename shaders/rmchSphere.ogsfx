@@ -1,9 +1,8 @@
 // rmchSphere.ogsfx
 // Maya Shader file
 
-// Simple shader demo which generate two implicit spheres with smooth minimum.
-// An animation of fusion of both sphere can be played with maya timeline.
-// The spheres are displayed using raymarching.
+// Simple demo shader that generates two implicit spheres and blends them with a smooth minimum. You can play an
+// animation of the spheres fusing using the Maya Timeline. The spheres are rendered with ray marching.
 
 #pragma FullCompileOnLoad:true;
 

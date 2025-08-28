@@ -1,8 +1,7 @@
 // infiniteSphere.ogsfx
 // Maya Shader OGSFX file
 
-// Shader demo which instanced spheres infinitely using repetition domain.
-// The spheres are displayed using raymarching.
+// Demo shader that instantiates spheres infinitely using domain repetition. The spheres are rendered with ray marching.
 
 #pragma FullCompileOnLoad:true;
 
