@@ -115,7 +115,7 @@ To display meshes converted into a signed distance field:
 This project is licensed under the MIT License.
 
 ## Contributing
-All contributions are welcome. Please refer to the contribution guidelines for details on how to contribute.
+All contributions are welcome.
 
 ## Credits
 The Stanford Bunny model is included for testing purposes only and remains the property 
