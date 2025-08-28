@@ -46,6 +46,13 @@ Each shader receives all relevant Maya camera attributes (position, rotation, FO
 The shaders are designed to work with Maya’s default viewport renderer, so **meshes and SDF surfaces can be displayed together in the same 
 viewport.**
 
+<p align="center">
+  <img src="doc/img/mesh_SDF_collision.PNG" alt="viewport" width="40%" />
+  <br/>
+  <sub>Overridden Maya viewport (the cube is a mesh and the sphere is an SDF)</sub>
+</p>
+
+
 ### Converting a Mesh into an SDF
 
 To render a mesh as an SDF, the first step is to convert the mesh into a 3D signed-distance grid. The grid fully encloses the mesh, 
@@ -55,6 +62,26 @@ package [mesh2sdf](https://pypi.org/project/mesh2sdf/), which uses the fast swee
 Using our `gen_sdf.py` script, which takes any OBJ mesh as input, you can generate this 3D grid. To make it easy for our shaders to 
 use, the 3D grid is flattened into a 2D texture (.png). Each pixel in the texture corresponds to the signed distance of a grid 
 cell, encoded in grayscale.
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="doc/img/stanford_bunny_mesh.PNG" alt="Stanford Bunny — Mesh" width="380" />
+      <br/>
+      <sub>Stanford Bunny — Mesh</sub>
+    </td>
+    <td align="center">
+      <img src="doc/img/stanford_bunny_implicitGridRender.PNG" alt="Stanford Bunny — Implicit Grid Render" width="400" />
+      <br/>
+      <sub>Stanford Bunny — SDF</sub>
+    </td>
+  </tr>
+</table>
+
+
+
+
+
 
 -------------------------------------------------------------------------------
 
@@ -120,3 +147,11 @@ All contributions are welcome.
 ## Credits
 The Stanford Bunny model is included for testing purposes only and remains the property 
 of the [Stanford Computer Graphics Laboratory](https://graphics.stanford.edu/data/3Dscanrep/).
+
+## Gallery
+
+<p align="center">
+  <img src="doc/img/infinite_sdf_spheres.PNG" alt="infiniteSphere"/>
+  <br/>
+  <sub>Output of the shader infiniteSphere</sub>
+</p>
