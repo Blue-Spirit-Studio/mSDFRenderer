@@ -15,8 +15,8 @@ The goal of the plugin is to **display SDF-defined surfaces in Maya’s viewport
 the shader or imported from a 3D grid that stores signed distances to a surface.
 
 SDF provide an alternative to polygon meshes for representing 3D surfaces. Instead of vertices and faces, a surface is specified by a 
-mathematical signed distance function, which can greatly reduce storage requirements. Ray marching is the rendering technique used to 
-visualize these implicit surfaces.
+mathematical function called "signed distance function", which can greatly reduce storage requirements and improve performances. 
+Ray marching is the rendering technique used to visualize these implicit surfaces.
 
 -------------------------------------------------------------------------------
 
