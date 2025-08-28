@@ -22,7 +22,7 @@ mathematical function called "signed distance function", which can greatly reduc
 >
 >1) If the point is on the surface, return 0.
 >2) If the point is outside, return the positive shortest distance to the surface.
->3) If the point is inside, return the negative shortest distance to the surface."
+>3) If the point is inside, return the negative shortest distance to the surface.
 >
 > **Ray Marching** is the rendering technique used to visualize these implicit surfaces.
 
