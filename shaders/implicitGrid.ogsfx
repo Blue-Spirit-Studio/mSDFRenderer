@@ -8,6 +8,9 @@
 // Shader that displays an implicit surface from a 3D signed distance field grid using ray marching.
 // This shader generates a sphere for each grid cell where the value is negative.
 
+// Author : Pierre Vandel
+
+
 #pragma FullCompileOnLoad:true;
 
 // World-view-projection transformation.

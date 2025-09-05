@@ -1,10 +1,14 @@
 """
-File        : gen_sdf.py
-Description : Script to generate an SDF from a given mesh (.obj)
-The SDF is stored into a 3D signed distance grid, where each cell of the grid contains his distance with the closest
-mesh surface.
-To be easily readable by the shader, this grid is flatten into a 2D texture (.png). A technique where multiple smaller
-images are combined into a single larger image called an atlas.
+File:           gen_sdf.py
+
+Description:    Script to generate an SDF from a given mesh (.obj). The SDF is
+                stored into a 3D signed distance grid, where each cell of the
+                grid contains his distance with the closest mesh surface.
+                To be easily readable by the shader, this grid is flatten into a
+                2D texture (.png). A technique where multiple smaller images are
+                combined into a single larger image called an atlas.
+
+Author:         Pierre Vandel
 """
 
 
@@ -36,7 +40,8 @@ def get_sdf(mesh, mesh_scale, size, level):
     :type mesh: Geometry
     :param mesh_scale: Scale factor for the mesh size inside the grid
     :type mesh_scale: float
-    :param size: Grid size (the resolution of the resulting SDF). Higher the size is, better the quality is.
+    :param size: Grid size (the resolution of the resulting SDF). Higher the
+    size is, better the quality is.
     :type size: int
     :param level: The value used to extract level sets
     :type level: float
@@ -73,7 +78,8 @@ def get_atlas(sdf_grid):
     for z in range(D):
         atlas[z*H:(z+1)*H, :] = sdf_grid[z]
 
-    # Normalization, converts signed distance values into grey level to be store in the image
+    # Normalization, converts signed distance values into grey level to be store
+    # in the image
     atlas_norm = ((atlas - atlas.min()) / (atlas.ptp() + 1e-8) * 255).astype(np.uint8)
     return atlas_norm
 

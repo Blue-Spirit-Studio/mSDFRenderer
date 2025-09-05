@@ -5,6 +5,9 @@
 //  Shader that displays an implicit surface from a 3D signed distance field grid using ray marching.
 // This shader does not generate spheres; the ray marching operates directly on the grid.
 
+// Author : Pierre Vandel
+
+
 #pragma FullCompileOnLoad:true;
 
 

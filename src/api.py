@@ -1,6 +1,9 @@
 """
-File        : api.py
-Description : API to get all the data from the Maya scene
+File:           api.py
+
+Description:    API to get all the data from the Maya scene
+
+Author:         Pierre Vandel
 """
 
 import maya.api.OpenMayaUI as omui

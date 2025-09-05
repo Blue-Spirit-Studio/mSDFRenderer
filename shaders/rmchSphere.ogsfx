@@ -4,6 +4,9 @@
 // Simple demo shader that generates two implicit spheres and blends them with a smooth minimum. You can play an
 // animation of the spheres fusing using the Maya Timeline. The spheres are rendered with ray marching.
 
+// Author : Pierre Vandel
+
+
 #pragma FullCompileOnLoad:true;
 
 // World-view-projection transformation.

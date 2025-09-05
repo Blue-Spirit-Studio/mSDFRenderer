@@ -1,6 +1,9 @@
 """
-File        : sdf_setting_node.py
-Description : Maya Node plugin to manage shaders parameters in real time
+File:           sdf_setting_node.py
+
+Description:    Maya Node plugin to manage shaders parameters in real time
+
+Author:         Pierre Vandel
 """
 
 import maya.api.OpenMaya as om

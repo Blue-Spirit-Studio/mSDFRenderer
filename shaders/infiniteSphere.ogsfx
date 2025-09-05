@@ -3,6 +3,9 @@
 
 // Demo shader that instantiates spheres infinitely using domain repetition. The spheres are rendered with ray marching.
 
+// Author : Pierre Vandel
+
+
 #pragma FullCompileOnLoad:true;
 
 // World-view-projection transformation.

@@ -6,8 +6,10 @@
 // domain to instantiate a sphere for each grid cell. The sphere’s radius depends on the grid value: if the value is
 // negative, the radius is positive; if the value is positive, the radius is null.
 
-#pragma FullCompileOnLoad:true;
+// Author : Pierre Vandel
 
+
+#pragma FullCompileOnLoad:true;
 
 // World-view-projection transformation.
 uniform mat4 gWVPXf : WorldViewProjection;

@@ -1,6 +1,10 @@
 """
-File        : sdf_render.py
-Description : SDF Renderer plugin for Maya which override Maya viewport to display SDF
+File:           sdf_render.py
+
+Description:    SDF Renderer plugin for Maya which override Maya viewport to
+                display SDF
+
+Author:         Pierre Vandel
 """
 
 from builtins import range
@@ -378,9 +382,11 @@ class SDFRenderOverride(omr.MRenderOverride):
 class viewRenderQuadRender(omr.MQuadRender):
     """
     Override of MQuadRender from OpenMayaRender
-    Operation used for post effect treatment, specific treatment for final render.
+    Operation used for post effect treatment, specific treatment for final
+    render.
     It consists of the creation of a quad in screen space.
-    It's during this operation that the shader instance is created and all the data is transfer to it thanks to
+    It's during this operation that the shader instance is created and all the
+    data is transfer to it thanks to
     MRenderTarget.
     """
 
@@ -405,7 +411,8 @@ class viewRenderQuadRender(omr.MQuadRender):
 
     def shader(self):
         """
-        Return the appropriate shader instance based on what we want the quad operation to perform
+        Return the appropriate shader instance based on what we want the quad
+        operation to perform
         """
         # Create a new shader instance for this quad render instance
         if self.mShaderInstance is None:
@@ -529,7 +536,8 @@ class viewRenderSceneRender(omr.MSceneRender):
 
     """
     Override of MSceneRender from OpenMayaRender
-    Render operation which manage display of the scene 3D content. It allows the drawing of 3D objects in
+    Render operation which manage display of the scene 3D content. It allows the
+    drawing of 3D objects in
     the viewport based on camera parameter such as lights, shadows and other.
     """
 
